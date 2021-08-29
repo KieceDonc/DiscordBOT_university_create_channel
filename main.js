@@ -29,9 +29,12 @@ function createRole(currentServObject,moduleName){
     return new Promise((resolve)=>{
         var tmpModuleName = new String(moduleName);
         currentServObject.roles.create({
-            name: tmpModuleName, 
-            color: "#9e9e9e", 
-            mentionable: true
+            data: {
+                name: tmpModuleName, 
+                color: "#9e9e9e", 
+                mentionable: true,
+              },
+            reason: 'we needed a role for Super Cool People',
         }).then((role)=>{
             resolve(role.id)
         });
