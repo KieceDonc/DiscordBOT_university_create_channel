@@ -65,15 +65,15 @@ function createAllChannels(currentServObject,moduleName,currentCategoryID){
     return new Promise((resolve)=>{
         currentServObject.channels.create("annonces-"+moduleName, {
             type: 'TEXT',
-            parent_id: currentCategoryID, 
+            parent: currentCategoryID, 
         }).then(()=>{
             currentServObject.channels.create("général-"+moduleName, {
                 type: 'TEXT',
-                parent_id: currentCategoryID, 
+                parent: currentCategoryID, 
             }).then(()=>{
                 currentServObject.channels.create("fichiers-"+moduleName, {
                     type: 'TEXT',
-                    parent_id: currentCategoryID, 
+                    parent: currentCategoryID, 
                 }).then(()=>{
                     resolve;
                 })
