@@ -12,9 +12,11 @@ bot.on('message', async message => {
     if(message.channel.id=="881639490878332938" && authorID!="881642877984317452"){
         try{
             createRole(currentServObject,moduleName).then((currentRoleID)=>{
-                createCategory(currentServObject,moduleName,currentRoleID).then((currentCategoryID)=>{
-                    createAllChannels(currentServObject,moduleName,currentCategoryID).then(()=>{
-                        message.channel.send(MC+" done");
+                createCategory(currentServObject,moduleName,currentRoleID).then((currentCategory)=>{
+                    createAllChannels(currentServObject,moduleName,currentCategory.id).then(()=>{
+                        changeCategoryPerm(currentServObject,currentCategory,currentRoleID).then(()=>{
+                            message.channel.send(MC+" done");
+                        })
                     })
                 })
             });
@@ -43,20 +45,10 @@ function createRole(currentServObject,moduleName){
 function createCategory(currentServObject,moduleName,currentRoleID){
     return new Promise((resolve)=>{ 
         // creating category for current module
-        var everyoneRoleID = currentServObject.roles.everyone.id;
         currentServObject.channels.create(moduleName, {
             type: 'CATEGORY',
         }).then((currentCategory)=>{
-             // changing permissions to allow only the role of the current module to see it and not everyone
-            currentCategory.overwritePermissions([{
-                id: currentRoleID, 
-                VIEW_CHANNEL: true
-            }]);
-            currentCategory.overwritePermissions([{
-                id: everyoneRoleID, 
-                VIEW_CHANNEL: false
-            }]);
-            resolve(currentCategory.id);
+            resolve(currentCategory);
         })
     });
 }
@@ -75,10 +67,28 @@ function createAllChannels(currentServObject,moduleName,currentCategoryID){
                     type: 'TEXT',
                     parent: currentCategoryID, 
                 }).then(()=>{
-                    resolve;
+                    resolve();
                 })
             })
         })
+    })
+}
+
+function changeCategoryPerm(currentServObject,currentCategory,currentRoleID){
+    return new Promise((resolve)=>{
+        var everyoneRoleID = currentServObject.roles.everyone.id;
+        // changing permissions to allow only the role of the current module to see it and not everyone
+        currentCategory.overwritePermissions([{
+            id: currentRoleID, 
+            VIEW_CHANNEL: true
+        }]).then(()=>{
+            currentCategory.overwritePermissions([{
+                id: everyoneRoleID, 
+                VIEW_CHANNEL: false
+            }]).then(()=>{
+                resolve();
+            });
+        });
     })
 }
 
