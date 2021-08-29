@@ -58,15 +58,18 @@ function createAllChannels(currentServObject,moduleName,currentCategoryID){
         currentServObject.channels.create("annonces-"+moduleName, {
             type: 'TEXT',
             parent: currentCategoryID, 
-        }).then(()=>{
+        }).then((annoncesChan)=>{
+            annoncesChan.lockPermissions();
             currentServObject.channels.create("général-"+moduleName, {
                 type: 'TEXT',
                 parent: currentCategoryID, 
-            }).then(()=>{
+            }).then((generalChan)=>{
+                annoncesChan.lockPermissions();
                 currentServObject.channels.create("fichiers-"+moduleName, {
                     type: 'TEXT',
                     parent: currentCategoryID, 
-                }).then(()=>{
+                }).then((fichiersChan)=>{
+                    fichiersChan.lockPermissions();
                     resolve();
                 })
             })
