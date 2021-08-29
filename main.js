@@ -11,7 +11,7 @@ bot.on('message', async message => {
 
     if(message.channel.id=="881639490878332938" && authorID!="881642877984317452"){
         var currentModuleRoleID = createRole(currentServObject,moduleName,message);
-        message.channel.send("done");
+        message.channel.send("done "+currentModuleRoleID);
     /*try{
         createCategory(currentServObject,moduleName).then(()=>{
             createAllChannels(currentServObject,moduleName).then(()=>{
@@ -25,14 +25,16 @@ bot.on('message', async message => {
 });
 
 function createRole(currentServObject,moduleName,message){
-    currentServObject.roles.create({
-        name:moduleName, 
-        color: "#9e9e9e", 
-        hoist: false,
-        mentionable: true
-    }).then((param)=>{
-        message.channel.send(param);
-    });
+    return new Promise((resolve)=>{
+        currentServObject.roles.create({
+            name: moduleName, 
+            color: "#9e9e9e", 
+            hoist: false,
+            mentionable: true
+        }).then((role)=>{
+            resolve(role.id)
+        });
+    })
 }
 
 function createCategory(currentServObject,moduleName){
