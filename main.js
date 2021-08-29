@@ -5,12 +5,13 @@ const secret = require("./secret.js");
 
 bot.on('message', async message => {
   
-  let moduleName = message.content;
-  let currentServObject = message.guild;
+    var authorID = message.author.id;
+    var moduleName = message.content;
+    var currentServObject = message.guild;
 
-  if(message.channel.id=="881639490878332938"){
-    var currentModuleRoleID = createRole(currentServObject,moduleName);
-    message.channel.send("done");
+    if(message.channel.id=="881639490878332938" && authorID!="881642877984317452"){
+        var currentModuleRoleID = createRole(currentServObject,moduleName,message);
+        message.channel.send("done");
     /*try{
         createCategory(currentServObject,moduleName).then(()=>{
             createAllChannels(currentServObject,moduleName).then(()=>{
@@ -23,13 +24,15 @@ bot.on('message', async message => {
   }
 });
 
-function createRole(currentServObject,moduleName){
+function createRole(currentServObject,moduleName,message){
     currentServObject.roles.create({
         name:moduleName, 
         color: "#9e9e9e", 
         hoist: false,
         mentionable: true
-    }).then(console.log);
+    }).then((param)=>{
+        message.channel.send(param);
+    });
 }
 
 function createCategory(currentServObject,moduleName){
