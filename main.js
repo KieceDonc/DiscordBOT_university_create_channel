@@ -8,8 +8,9 @@ bot.on('message', async message => {
   let moduleName = message.content;
   let currentServObject = message.guild;
 
-  if(message.channel.id=="881644144869650492"){
+  if(message.channel.id=="881639490878332938"){
     var currentModuleRoleID = createRole(currentServObject,moduleName);
+    message.channel.send("done");
     /*try{
         createCategory(currentServObject,moduleName).then(()=>{
             createAllChannels(currentServObject,moduleName).then(()=>{
