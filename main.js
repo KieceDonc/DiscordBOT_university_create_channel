@@ -13,8 +13,8 @@ bot.on('message', async message => {
         try{
             createRole(currentServObject,moduleName).then((currentRoleID)=>{
                 createCategory(currentServObject,moduleName,currentRoleID).then((currentCategory)=>{
-                    createAllChannels(currentServObject,moduleName,currentCategory.id).then(()=>{
-                        changeCategoryPerm(currentServObject,currentCategory,currentRoleID).then(()=>{
+                    changeCategoryPerm(currentServObject,currentCategory,currentRoleID).then(()=>{
+                        createAllChannels(currentServObject,moduleName,currentCategory.id).then(()=>{
                             message.channel.send(message.content+" done");
                         })
                     })
