@@ -17,8 +17,8 @@ Bot.on('message', async message => {
         })
     }catch(err){
         message.channel.send("err:\n"+err);
-    }
-  }*/
+    }*/
+  }
 });
 
 function createRole(currentServObject,moduleName){
