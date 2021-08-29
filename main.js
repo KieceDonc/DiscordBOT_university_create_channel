@@ -10,55 +10,73 @@ bot.on('message', async message => {
     var currentServObject = message.guild;
 
     if(message.channel.id=="881639490878332938" && authorID!="881642877984317452"){
+    try{
         createRole(currentServObject,moduleName).then((currentRoleID)=>{
-            message.channel.send("done "+currentRoleID);
-        });
-    /*try{
-        createCategory(currentServObject,moduleName).then(()=>{
-            createAllChannels(currentServObject,moduleName).then(()=>{
-                message.channel.send(MC+" done");
+            createCategory(currentServObject,moduleName,currentRoleID).then((currentCategoryID)=>{
+                createAllChannels(currentServObject,moduleName,currentCategoryID).then(()=>{
+                    message.channel.send(MC+" done");
+                })
             })
-        })
+        });
     }catch(err){
         message.channel.send("err:\n"+err);
-    }*/
+    }
   }
 });
 
 function createRole(currentServObject,moduleName){
-    return new Promise((resolve)=>{
-        var tmpModuleName = new String(moduleName);
+    return new Promise((resolve)=>{ 
+        // creating role for current module
         currentServObject.roles.create({
             data: {
-                name: tmpModuleName, 
+                name: moduleName, 
                 color: "#9e9e9e", 
                 mentionable: true,
               },
             reason: 'we needed a role for Super Cool People',
-        }).then((role)=>{
-            resolve(role.id)
+        }).then((currentRole)=>{
+            resolve(currentRole.id)
         });
     })
 }
 
-function createCategory(currentServObject,moduleName){
-    return new Promise((resolve)=>{
+function createCategory(currentServObject,moduleName,currentRoleID){
+    return new Promise((resolve)=>{ 
+        // creating category for current module
+        var everyoneRoleID = currentServObject.roles.everyone.id;
         currentServObject.channels.create(moduleName, {
-            type: 'category',
-            permissionOverwrites: [
-                {
-                    id: message.guild.id,
-                    allow: ['VIEW_CHANNEL'],
-                }]
-        }).then(()=>{
-            resolve;
+            type: 'GUILD_CATEGORY',
+        }).then((currentCategory)=>{
+             // changing permissions to allow only the role of the current module to see it and not everyone
+            currentCategory.overwritePermissions(currentRoleID, {
+                VIEW_CHANNEL: true
+            });
+            currentCategory.overwritePermissions(everyoneRoleID, {
+                VIEW_CHANNEL: false
+            });
+            resolve(currentCategory.id);
         })
     });
 }
 
-function createAllChannels(currentServObject,moduleName){
+function createAllChannels(currentServObject,moduleName,currentCategoryID){
     return new Promise((resolve)=>{
-        resolve;
+        currentServObject.channels.create("annonces-"+moduleName, {
+            type: 'GUILD_TEXT',
+            parent_id: currentCategoryID, 
+        }).then(()=>{
+            currentServObject.channels.create("général-"+moduleName, {
+                type: 'GUILD_TEXT',
+                parent_id: currentCategoryID, 
+            }).then(()=>{
+                currentServObject.channels.create("fichiers-"+moduleName, {
+                    type: 'GUILD_TEXT',
+                    parent_id: currentCategoryID, 
+                }).then(()=>{
+                    resolve;
+                })
+            })
+        })
     })
 }
 
