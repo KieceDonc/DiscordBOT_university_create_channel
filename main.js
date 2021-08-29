@@ -10,17 +10,17 @@ bot.on('message', async message => {
     var currentServObject = message.guild;
 
     if(message.channel.id=="881639490878332938" && authorID!="881642877984317452"){
-    try{
-        createRole(currentServObject,moduleName).then((currentRoleID)=>{
-            createCategory(currentServObject,moduleName,currentRoleID).then((currentCategoryID)=>{
-                createAllChannels(currentServObject,moduleName,currentCategoryID).then(()=>{
-                    message.channel.send(MC+" done");
+        try{
+            createRole(currentServObject,moduleName).then((currentRoleID)=>{
+                createCategory(currentServObject,moduleName,currentRoleID).then((currentCategoryID)=>{
+                    createAllChannels(currentServObject,moduleName,currentCategoryID).then(()=>{
+                        message.channel.send(MC+" done");
+                    })
                 })
-            })
-        });
-    }catch(err){
-        message.channel.send("err:\n"+err);
-    }
+            });
+        }catch(err){
+            message.channel.send("err:\n"+err);
+        }
   }
 });
 
@@ -45,15 +45,17 @@ function createCategory(currentServObject,moduleName,currentRoleID){
         // creating category for current module
         var everyoneRoleID = currentServObject.roles.everyone.id;
         currentServObject.channels.create(moduleName, {
-            type: 'GUILD_CATEGORY',
+            type: 'CATEGORY',
         }).then((currentCategory)=>{
              // changing permissions to allow only the role of the current module to see it and not everyone
-            currentCategory.overwritePermissions(currentRoleID, {
+            currentCategory.overwritePermissions([{
+                id: currentRoleID, 
                 VIEW_CHANNEL: true
-            });
-            currentCategory.overwritePermissions(everyoneRoleID, {
+            }]);
+            currentCategory.overwritePermissions([{
+                id: everyoneRoleID, 
                 VIEW_CHANNEL: false
-            });
+            }]);
             resolve(currentCategory.id);
         })
     });
@@ -62,15 +64,15 @@ function createCategory(currentServObject,moduleName,currentRoleID){
 function createAllChannels(currentServObject,moduleName,currentCategoryID){
     return new Promise((resolve)=>{
         currentServObject.channels.create("annonces-"+moduleName, {
-            type: 'GUILD_TEXT',
+            type: 'TEXT',
             parent_id: currentCategoryID, 
         }).then(()=>{
             currentServObject.channels.create("général-"+moduleName, {
-                type: 'GUILD_TEXT',
+                type: 'TEXT',
                 parent_id: currentCategoryID, 
             }).then(()=>{
                 currentServObject.channels.create("fichiers-"+moduleName, {
-                    type: 'GUILD_TEXT',
+                    type: 'TEXT',
                     parent_id: currentCategoryID, 
                 }).then(()=>{
                     resolve;
