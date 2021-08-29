@@ -15,7 +15,7 @@ bot.on('message', async message => {
                 createCategory(currentServObject,moduleName,currentRoleID).then((currentCategory)=>{
                     createAllChannels(currentServObject,moduleName,currentCategory.id).then(()=>{
                         changeCategoryPerm(currentServObject,currentCategory,currentRoleID).then(()=>{
-                            message.channel.send(MC+" done");
+                            message.channel.send(message.content+" done");
                         })
                     })
                 })
@@ -78,16 +78,17 @@ function changeCategoryPerm(currentServObject,currentCategory,currentRoleID){
     return new Promise((resolve)=>{
         var everyoneRoleID = currentServObject.roles.everyone.id;
         // changing permissions to allow only the role of the current module to see it and not everyone
-        currentCategory.overwritePermissions([{
-            id: currentRoleID, 
-            VIEW_CHANNEL: true
-        }]).then(()=>{
-            currentCategory.overwritePermissions([{
+        currentCategory.overwritePermissions([
+            {
+                id: currentRoleID, 
+                allow: 'VIEW_CHANNEL',
+            },
+            {
                 id: everyoneRoleID, 
-                VIEW_CHANNEL: false
-            }]).then(()=>{
-                resolve();
-            });
+                deny: 'VIEW_CHANNEL',
+            }
+        ]).then(()=>{
+            resolve();
         });
     })
 }
