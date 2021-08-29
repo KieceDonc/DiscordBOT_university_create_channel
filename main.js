@@ -1,8 +1,9 @@
+const Discord = require('discord.js')
 const bot = new Discord.Client();
 const secret = require("./secret.js");
 
 
-Bot.on('message', async message => {
+bot.on('message', async message => {
   
   let moduleName = message.content;
   let currentServObject = message.guild;
