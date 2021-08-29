@@ -14,7 +14,7 @@ bot.on('message', async message => {
             createRole(currentServObject,moduleName).then((currentRoleID)=>{
                 createCategory(currentServObject,moduleName,currentRoleID).then((currentCategory)=>{
                     changeCategoryPerm(currentServObject,currentCategory,currentRoleID).then(()=>{
-                        createAllChannels(currentServObject,moduleName,currentCategory.id).then(()=>{
+                        createAllChannels(currentServObject,currentCategory.id).then(()=>{
                             message.channel.send(message.content+" done");
                         })
                     })
@@ -53,19 +53,19 @@ function createCategory(currentServObject,moduleName,currentRoleID){
     });
 }
 
-function createAllChannels(currentServObject,moduleName,currentCategoryID){
+function createAllChannels(currentServObject,currentCategoryID){
     return new Promise((resolve)=>{
-        currentServObject.channels.create("annonces-"+moduleName, {
+        currentServObject.channels.create("annonces-", {
             type: 'TEXT',
             parent: currentCategoryID, 
         }).then((annoncesChan)=>{
             annoncesChan.lockPermissions();
-            currentServObject.channels.create("général-"+moduleName, {
+            currentServObject.channels.create("général-", {
                 type: 'TEXT',
                 parent: currentCategoryID, 
             }).then((generalChan)=>{
                 annoncesChan.lockPermissions();
-                currentServObject.channels.create("fichiers-"+moduleName, {
+                currentServObject.channels.create("fichiers-", {
                     type: 'TEXT',
                     parent: currentCategoryID, 
                 }).then((fichiersChan)=>{
