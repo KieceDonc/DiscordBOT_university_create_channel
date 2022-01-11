@@ -1,0 +1,23 @@
+{
+  "name": "discordbot_university_create_channel",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KieceDonc/DiscordBOT_university_create_channel.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KieceDonc/DiscordBOT_university_create_channel/issues"
+  },
+  "homepage": "https://github.com/KieceDonc/DiscordBOT_university_create_channel#readme",
+  "dependencies": {
+    "discord.js": "^13.5.1"
+  }
+}
