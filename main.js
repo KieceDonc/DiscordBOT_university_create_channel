@@ -39,7 +39,7 @@ client.on('message', async message => {
             if(savedPosition==-1){
                 message.channel.send("No position saved");
             }else{
-                commandPosition(message)
+                commandThis(message)
             }
 
         }
