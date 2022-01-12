@@ -3,30 +3,48 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS,Intents.FLAGS.GUILD_M
 const secret = require("./secret.js");
 
 
+var adminID = "302529594685128707";
 var allChanCurrentSemestreID = "930490087878299688";
+var savedPosition = -1;
 
 client.on('message', async message => {
  
-    var authorID = message.author.id;
-    var moduleName = message.content.split("&")[0];
-    var moduleAbbreviation = message.content.split("&")[1];
-    var currentServObject = message.guild;
+    let authorID = message.author.id;
+    let moduleName = message.content.split("&")[0];
+    let msgContent = moduleName;
+    let moduleAbbreviation = message.content.split("&")[1];
+    let currentServObject = message.guild;
 
-    if(message.channel.id=="881639490878332938" && authorID=="302529594685128707"){
-        try{
-            createRole(currentServObject,moduleName).then((currentRoleID)=>{
-                createCategory(currentServObject,moduleName).then((currentCategory)=>{
-                    changeCategoryPerm(currentServObject,currentCategory,currentRoleID).then(()=>{
-                        createAllChannels(currentServObject,currentCategory.id,moduleAbbreviation).then(()=>{
-                            message.channel.send("Module "+moduleName+" avec abrévation "+moduleAbbreviation+" finit");
+
+    if(authorID==adminID){
+
+        if(message.channel.id=="881639490878332938"){
+            try{
+                createRole(currentServObject,moduleName).then((currentRoleID)=>{
+                    createCategory(currentServObject,moduleName).then((currentCategory)=>{
+                        changeCategoryPerm(currentServObject,currentCategory,currentRoleID).then(()=>{
+                            createAllChannels(currentServObject,currentCategory.id,moduleAbbreviation).then(()=>{
+                                message.channel.send("Module "+moduleName+" avec abrévation "+moduleAbbreviation+" finit");
+                            })
                         })
                     })
-                })
-            });
-        }catch(err){
-            message.channel.send("err:\n"+err);
+                });
+            }catch(err){
+                message.channel.send("err:\n"+err);
+            }
+        }else if(msgContent.toLowerCase().includes("!position")){
+            commandPosition(message)
+        }else if(msgContent.toLowerCase().includes("!this")){
+            // Move current category of msg under last !this / !position category
+            if(savedPosition==-1){
+                message.channel.send("No position saved");
+            }else{
+                commandPosition(message)
+            }
+
         }
-  }
+            
+    }
 });
 
 function createRole(currentServObject,moduleName){
@@ -98,6 +116,20 @@ function changeCategoryPerm(currentServObject,currentCategory,currentRoleID){
             resolve();
         });
     })
+}
+
+function commandPosition(message){
+    let currentCategory = message.channel.parent;
+    savedPosition = currentCategory.position
+    message.channel.send("Position = "+savedPosition+" saved");
+}
+
+function commandThis(message){
+    let currentCategory = message.channel.parent;
+    message.channel.send("Current position = "+currentCategory.position+" moving to "+(savedPosition+1));
+    currentCategory.edit({position:(savedPosition+1)})
+    savedPosition+=currentCategory.position+1;
+    message.channel.send("Current position = "+currentCategory.position+" savedPosition = "+savedPosition);
 }
 
 client.login(secret.token);
