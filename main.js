@@ -129,7 +129,6 @@ function commandThis(message){
     message.channel.send("Current position = "+currentCategory.position+" moving to "+(savedPosition+1));
     currentCategory.edit({position:(savedPosition+1)})
     savedPosition+=1;
-    message.channel.send("Current position = "+currentCategory.position+" savedPosition = "+savedPosition);
 }
 
 client.login(secret.token);
