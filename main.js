@@ -4,7 +4,7 @@ const secret = require("./secret.js");
 
 
 var adminID = "302529594685128707";
-var allChanCurrentSemestreID = "930490087878299688";
+var allChanCurrentSemestreID = "1011661311026937907";
 var savedPosition = -1;
 
 client.on('message', async message => {
@@ -18,7 +18,7 @@ client.on('message', async message => {
 
     if(authorID==adminID){
 
-        if(message.channel.id=="881639490878332938"){
+        if(message.channel.id=="994961032554491944"){
             try{
                 createRole(currentServObject,moduleName).then((currentRoleID)=>{
                     createCategory(currentServObject,moduleName).then((currentCategory)=>{
